@@ -48,7 +48,12 @@ jobs:
       - name: Parse tags
         id: parseTags
         run: |
-              echo "tags=${{ steps.getTags.outputs.group1 }}" >> $GITHUB_OUTPUT
+              if [[ ${{ steps.getTags.outputs.group1 }} != '' ]]; then
+                echo "tags=${{ steps.getTags.outputs.group1 }}" >> $GITHUB_OUTPUT
+              else 
+                echo "Tags were not found!"
+                exit 1
+              fi  
 
       - name: Add a comment on the PR with tags documentation link
         if: steps.parseTags.outcome != 'success'
@@ -109,13 +114,14 @@ jobs:
           issue-number: ${{ github.event.number }}
           body: |
             Tests running at: <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}>.
+            Commit: `${{ github.event.pull_request.head.sha }}`
             Workflow: `${{ github.workflow }}`.
             Tags: `${{ steps.checkAll.outputs.tags }}`.
 
   perform-test:
     needs: [parse-tags]
     if: success()
-    uses: ./.github/workflows/test.yml
+    uses: ./.github/workflows/integration-tests-command-2.yml
     with:
       tags: ${{ needs.parse-tags.outputs.tags}}
       matrix: ${{ needs.parse-tags.outputs.matrix}}
