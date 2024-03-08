@@ -29,6 +29,8 @@ jobs:
     needs: [check-labels]
     if: success()
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
     defaults:
       run:
         shell: bash
