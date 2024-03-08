@@ -50,10 +50,10 @@ jobs:
         run: |
               if [[ '${{ steps.getTags.outputs.group1 }}' != '' ]]; then
                 echo "tags=${{ steps.getTags.outputs.group1 }}" >> $GITHUB_OUTPUT
-                echo "outcome=success"
+                echo "outcome=success" >> $GITHUB_OUTPUT
               else 
                 echo "Tags were not found!"
-                echo "outcome=failure"
+                echo "outcome=failure" >> $GITHUB_OUTPUT
               fi  
 
       - name: Add a comment on the PR with tags documentation link
