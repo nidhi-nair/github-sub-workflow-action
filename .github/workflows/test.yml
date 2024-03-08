@@ -1,0 +1,22 @@
+name: Appsmith External Integration Test Workflow
+
+on:
+  workflow_call:
+    inputs:
+      tags:
+        required: true
+        type: string
+      matrix:
+        required: true
+        type: string
+
+jobs:
+  ci-test-result:
+    # Only run if the ci-test with matrices step is successful
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Test status
+        run: exit 1
