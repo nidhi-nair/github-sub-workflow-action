@@ -45,18 +45,6 @@ jobs:
           text: ${{ github.event.pull_request.body }}
           regex: '^/ok-to-test tags="([^"]*)"$'
 
-      # - name: Parse tags
-      #   id: parseTags
-      #   run: |
-      #       body='${{ github.event.issue.body }}';
-      #       REGEX='/ok-to-test tags="([^"]*)"';
-      #       if [[ $body =~ $REGEX ]]; then
-      #         echo "tags=${BASH_REMATCH[1]}" >> $GITHUB_OUTPUT
-      #         echo "yay"
-      #       else
-      #         echo 404
-      #       fi
-
       - name: Parse tags
         id: parseTags
         run: |
