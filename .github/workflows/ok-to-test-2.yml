@@ -48,7 +48,7 @@ jobs:
       - name: Parse tags
         id: parseTags
         run: |
-              if [[ ${{ steps.getTags.outputs.group1 }} != '' ]]; then
+              if [[ '${{ steps.getTags.outputs.group1 }}' != '' ]]; then
                 echo "tags=${{ steps.getTags.outputs.group1 }}" >> $GITHUB_OUTPUT
               else 
                 echo "Tags were not found!"
