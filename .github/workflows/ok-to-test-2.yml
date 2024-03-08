@@ -52,15 +52,16 @@ jobs:
                 echo "outcome=failure" >> $GITHUB_OUTPUT
               fi  
 
-      - name: Add a comment on the PR with tags documentation link
+      - name: Add test response with tags documentation link
         if: steps.parseTags.outputs.outcome != 'success'
         uses: nefrob/pr-description@v1.1.1
         with:
             content: |
               ################# _Do Not Edit This Area_ #################
-              **ok-to-test Response:**
+              #### ok-to-test Response:
               The provided command lacks proper tags. Please modify PR body, specifying the tags you want to include or use `/ok-to-test tags="@tag.All"` to run all specs.
               Explore the tags documentation [here](https://www.notion.so/appsmith/Ok-to-test-With-Tags-7c0fc64d4efb4afebf53348cd6252918)
+
               ###################################################"
             regex: "################# _Do Not Edit This Area_ #################.*?###################################################"
             regexFlags: ims
@@ -84,41 +85,60 @@ jobs:
             echo "matrix=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]" >> $GITHUB_OUTPUT
           fi
 
-      - name: Add comment to use correct @tag.All format 
+      - name: Add test response to use correct @tag.All format 
         if: steps.checkAll.outputs.invalid_tags_all != ''
-        uses: peter-evans/create-or-update-comment@v3
+        uses: nefrob/pr-description@v1.1.1
         with:
-          issue-number: ${{ github.event.number }}
-          body: |
-            Please use `/ok-to-test tags="@tag.All"` to run all specs.
-            Explore the tags documentation [here](https://www.notion.so/appsmith/Ok-to-test-With-Tags-7c0fc64d4efb4afebf53348cd6252918)
-      
+            content: |
+              ################# _Do Not Edit This Area_ #################
+              #### ok-to-test Response:
+              Please use `/ok-to-test tags="@tag.All"` to run all specs.
+              Explore the tags documentation [here](https://www.notion.so/appsmith/Ok-to-test-With-Tags-7c0fc64d4efb4afebf53348cd6252918)
+
+              ###################################################"
+            regex: "################# _Do Not Edit This Area_ #################.*?###################################################"
+            regexFlags: ims
+            token: ${{ secrets.GITHUB_TOKEN }}
+        
       - name: Stop the workflow run if given @tag.All format is wrong
         if: steps.checkAll.outputs.invalid_tags_all != ''
         run: exit 1
 
       # tags is set to empty string if @tag.All is given in step - Check if @tag.All is present in tags
-      - name: Add suggestion in the PR on using @tag.All 
+      - name: Add test response to use @tag.All 
         if: steps.checkAll.outputs.tags == ''
-        uses: peter-evans/create-or-update-comment@v3
+        uses: nefrob/pr-description@v1.1.1
         with:
-          issue-number: ${{ github.event.number }}
-          body: |
-            Whoa, @tag.All spotted in your test suite! 🚀
-            While @tag.All is cool, like a catch-all net, why not try specific tags? 🏷️
-            Narrow down your suite with specific tags for quicker and more accurate tests! 🚀 Less waiting, more zipping through tests like a ninja!
-            Explore the tags documentation [here](https://www.notion.so/appsmith/Ok-to-test-With-Tags-7c0fc64d4efb4afebf53348cd6252918)
+            content: |
+              ################# _Do Not Edit This Area_ #################
+              #### ok-to-test Response:
+              Whoa, @tag.All spotted in your test suite! 🚀
+              While @tag.All is cool, like a catch-all net, why not try specific tags? 🏷️
+              Narrow down your suite with specific tags for quicker and more accurate tests! 🚀 Less waiting, more zipping through tests like a ninja!
+              Explore the tags documentation [here](https://www.notion.so/appsmith/Ok-to-test-With-Tags-7c0fc64d4efb4afebf53348cd6252918)
 
+              ###################################################"
+            regex: "################# _Do Not Edit This Area_ #################.*?###################################################"
+            regexFlags: ims
+            token: ${{ secrets.GITHUB_TOKEN }}
+        
       # This step creates a comment on the PR with a link to this workflow run.
-      - name: Add a comment on the PR with link to workflow run
-        uses: peter-evans/create-or-update-comment@v3
+      - name: Add test response with link to workflow run
+        uses: nefrob/pr-description@v1.1.1
         with:
-          issue-number: ${{ github.event.number }}
-          body: |
-            Tests running at: <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}>.
-            Commit: `${{ github.event.pull_request.head.sha }}`
-            Workflow: `${{ github.workflow }}`.
-            Tags: `${{ steps.checkAll.outputs.tags }}`.
+            content: |
+              ################# _Do Not Edit This Area_ #################
+              #### ok-to-test Response:
+              Tests running at: <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}>.
+              Commit: `${{ github.event.pull_request.head.sha }}`
+              Workflow: `${{ github.workflow }}`.
+              Tags: `${{ steps.checkAll.outputs.tags }}`.
+
+              ###################################################"
+            regex: "################# _Do Not Edit This Area_ #################.*?###################################################"
+            regexFlags: ims
+            token: ${{ secrets.GITHUB_TOKEN }}
+            uses: peter-evans/create-or-update-comment@v3
 
   perform-test:
     needs: [parse-tags]
