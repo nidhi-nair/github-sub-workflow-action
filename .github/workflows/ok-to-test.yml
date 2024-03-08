@@ -2,11 +2,31 @@
 name: Ok To Test
 
 on:
-  issue_comment:
-    types: [created]
+  pull_request:
+    branches: [main]
+    types:
+      - opened
+      - labeled
 
 jobs:
+  check-labels:
+    name: Check for Test Plan Approved label
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dump the client payload context
+        env:
+          PAYLOAD_CONTEXT: ${{ toJson(github.event) }}
+        run: echo "$PAYLOAD_CONTEXT"
+
+      - uses: docker://agilepathway/pull-request-label-checker:latest
+        with:
+          # Needs to have a Test Plan Approved label if not part of any of the pods below
+          any_of: ok-to-test
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+
   parse-tags:
+    needs: [check-labels]
+    if: success()
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -15,22 +35,29 @@ jobs:
       tags: ${{ steps.checkAll.outputs.tags }}
       matrix: ${{ steps.checkAll.outputs.matrix }}
     steps:
-      - name: Dump the client payload context
-        env:
-          PAYLOAD_CONTEXT: ${{ toJson(github.event) }}
-        run: echo "$PAYLOAD_CONTEXT"
+      - name: Get tags
+        uses: actions-ecosystem/action-regex-match@v2
+        id: getTags
+        with:
+          text: ${{ github.event.issue.body }}
+          regex: '^/ok-to-test tags="([^"]*)"$'
+
+      # - name: Parse tags
+      #   id: parseTags
+      #   run: |
+      #       body='${{ github.event.issue.body }}';
+      #       REGEX='/ok-to-test tags="([^"]*)"';
+      #       if [[ $body =~ $REGEX ]]; then
+      #         echo "tags=${BASH_REMATCH[1]}" >> $GITHUB_OUTPUT
+      #         echo "yay"
+      #       else
+      #         echo 404
+      #       fi
 
       - name: Parse tags
         id: parseTags
         run: |
-            body='${{ github.event.comment.body }}';
-            REGEX='/ok-to-test tags="([^"]*)"';
-            if [[ $body =~ $REGEX ]]; then
-              echo "tags=${BASH_REMATCH[1]}" >> $GITHUB_OUTPUT
-              echo "yay"
-            else
-              echo 404
-            fi
+              echo "tags=${{ steps.getTags.outputs.group1 }}" >> $GITHUB_OUTPUT
 
       - name: Add a comment on the PR with tags documentation link
         if: steps.parseTags.outcome != 'success'
@@ -96,6 +123,7 @@ jobs:
 
   ok-to-test:
     needs: [parse-tags]
+    if: success()
     uses: ./.github/workflows/test.yml
     with:
       tags: ${{ needs.parse-tags.outputs.tags}}
