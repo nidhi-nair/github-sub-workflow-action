@@ -43,7 +43,7 @@ jobs:
         id: getTags
         with:
           text: ${{ github.event.pull_request.body }}
-          regex: '^/ok-to-test tags="([^"]*)"$'
+          regex: '/ok-to-test tags="([^"]*)"'
 
       - name: Parse tags
         id: parseTags
