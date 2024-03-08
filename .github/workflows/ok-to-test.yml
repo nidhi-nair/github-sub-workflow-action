@@ -15,6 +15,11 @@ jobs:
       tags: ${{ steps.checkAll.outputs.tags }}
       matrix: ${{ steps.checkAll.outputs.matrix }}
     steps:
+      - name: Dump the client payload context
+        env:
+          PAYLOAD_CONTEXT: ${{ toJson(github.event.client_payload) }}
+        run: echo "$PAYLOAD_CONTEXT"
+        
       - name: Parse tags
         id: parseTags
         run: |
