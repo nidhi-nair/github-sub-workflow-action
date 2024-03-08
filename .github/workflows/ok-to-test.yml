@@ -85,14 +85,14 @@ jobs:
             Explore the tags documentation [here](https://www.notion.so/appsmith/Ok-to-test-With-Tags-7c0fc64d4efb4afebf53348cd6252918)
 
       # This step creates a comment on the PR with a link to this workflow run.
-      - name: Add a comment on the PR with link to workflow run
-        uses: peter-evans/create-or-update-comment@v3
-        with:
-          issue-number: ${{ github.event.issue.number }}
-          body: |
-            Tests running at: <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}>.
-            Workflow: `${{ github.workflow }}`.
-            Tags: `${{ steps.checkAll.outputs.tags }}`.
+      # - name: Add a comment on the PR with link to workflow run
+      #   uses: peter-evans/create-or-update-comment@v3
+      #   with:
+      #     issue-number: ${{ github.event.issue.number }}
+      #     body: |
+      #       Tests running at: <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}>.
+      #       Workflow: `${{ github.workflow }}`.
+      #       Tags: `${{ steps.checkAll.outputs.tags }}`.
 
   ok-to-test:
     needs: [parse-tags]
