@@ -19,11 +19,14 @@ jobs:
     outputs:
       tags: ${{ steps.checkAll.outputs.tags }}
       matrix: ${{ steps.checkAll.outputs.matrix }}
+      skip: ${{ steps.checkLabel.outputs.skip }}
     steps:
       - name: Check label
+        id: checkLabel
         run: |
               if [[ '${{ github.event.label.name }}' != 'ok-to-test' ]]; then
                 echo "Irrelevant label '${{ github.event.label.name }}' added! "
+                echo "skip=true" >> $GITHUB_OUTPUT
                 exit 1
               fi  
 
@@ -110,8 +113,9 @@ jobs:
 
   perform-test:
     needs: [parse-tags]
-    if: success()
+    if: success() || needs.parse-tags.outputs.skip == 'true'
     uses: ./.github/workflows/test.yml
     with:
       tags: ${{ needs.parse-tags.outputs.tags}}
       matrix: ${{ needs.parse-tags.outputs.matrix}}
+      skip: ${{ needs.parse-tags.outputs.skip}}
