@@ -50,8 +50,10 @@ jobs:
         run: |
               if [[ '${{ steps.getTags.outputs.group1 }}' != '' ]]; then
                 echo "tags=${{ steps.getTags.outputs.group1 }}" >> $GITHUB_OUTPUT
+                echo "outcome=success"
               else 
                 echo "Tags were not found!"
+                echo "outcome=failure"
                 exit 1
               fi  
 
@@ -61,7 +63,7 @@ jobs:
         with:
           issue-number: ${{ github.event.number }}
           body: |
-            The provided command lacks proper tags. Please execute '/ok-to-test' again, specifying the tags you want to include or use `/ok-to-test tags="@tag.All"` to run all specs.
+            The provided command lacks proper tags. Please modify PR body, specifying the tags you want to include or use `/ok-to-test tags="@tag.All"` to run all specs.
             Explore the tags documentation [here](https://www.notion.so/appsmith/Ok-to-test-With-Tags-7c0fc64d4efb4afebf53348cd6252918)
 
       - name: Stop the workflow run if tags are not present
