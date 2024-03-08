@@ -40,7 +40,7 @@ jobs:
         id: getTags
         with:
           text: ${{ github.event.issue.body }}
-          regex: '^/ok-to-test tags="([^"]*)"$'
+          regex: '^/ok-to-test tags="([^"]*)"'
 
       # - name: Parse tags
       #   id: parseTags
@@ -57,7 +57,7 @@ jobs:
       - name: Parse tags
         id: parseTags
         run: |
-              echo "tags=${{ steps.getTags.outputs.group1 }}" >> $GITHUB_OUTPUT
+              echo "tags=${{ steps.getTags.outputs.match }}" >> $GITHUB_OUTPUT
 
       - name: Add a comment on the PR with tags documentation link
         if: steps.parseTags.outcome != 'success'
