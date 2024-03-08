@@ -11,5 +11,12 @@ jobs:
     steps:
       - name: Check for args
         run: |
-            echo ${{ toJSON(github.event) }};
+            body = ${{ github.event.comment.body }};
+            REGEX='/ok-to-test (tags="([^"\\]*)")';
+            if [[ $body =~ $REGEX ]]; then
+              echo all: "$BASH_REMATCH[0]"
+              echo "yay"
+            else
+              echo 404
+            fi
             exit 0;
