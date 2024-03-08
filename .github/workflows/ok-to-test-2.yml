@@ -121,7 +121,7 @@ jobs:
   perform-test:
     needs: [parse-tags]
     if: success()
-    uses: ./.github/workflows/integration-tests-command-2.yml
+    uses: ./.github/workflows/test.yml
     with:
       tags: ${{ needs.parse-tags.outputs.tags}}
       matrix: ${{ needs.parse-tags.outputs.matrix}}
