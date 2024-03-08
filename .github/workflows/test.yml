@@ -18,5 +18,7 @@ jobs:
       run:
         shell: bash
     steps:
-      - name: Test status
-        run: exit 1
+      - uses: actions/github-script@v6
+        with:
+          script: |
+            console.log(context)
