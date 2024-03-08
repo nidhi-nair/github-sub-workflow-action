@@ -21,4 +21,5 @@ jobs:
       - uses: actions/github-script@v6
         with:
           script: |
-            console.log(context)
+            console.log(${{ inputs.tags }})
+            console.log(${{ inputs.matrix }})
