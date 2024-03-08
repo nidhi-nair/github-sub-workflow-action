@@ -62,7 +62,7 @@ jobs:
               The provided command lacks proper tags. Please modify PR body, specifying the tags you want to include or use `/ok-to-test tags="@tag.All"` to run all specs.
               Explore the tags documentation [here](https://www.notion.so/appsmith/Ok-to-test-With-Tags-7c0fc64d4efb4afebf53348cd6252918)
 
-              ###################################################"
+              ###################################################
             regex: "################# _Do Not Edit This Area_ #################.*?###################################################"
             regexFlags: ims
             token: ${{ secrets.GITHUB_TOKEN }}
@@ -95,7 +95,7 @@ jobs:
               Please use `/ok-to-test tags="@tag.All"` to run all specs.
               Explore the tags documentation [here](https://www.notion.so/appsmith/Ok-to-test-With-Tags-7c0fc64d4efb4afebf53348cd6252918)
 
-              ###################################################"
+              ###################################################
             regex: "################# _Do Not Edit This Area_ #################.*?###################################################"
             regexFlags: ims
             token: ${{ secrets.GITHUB_TOKEN }}
@@ -117,7 +117,7 @@ jobs:
               Narrow down your suite with specific tags for quicker and more accurate tests! 🚀 Less waiting, more zipping through tests like a ninja!
               Explore the tags documentation [here](https://www.notion.so/appsmith/Ok-to-test-With-Tags-7c0fc64d4efb4afebf53348cd6252918)
 
-              ###################################################"
+              ###################################################
             regex: "################# _Do Not Edit This Area_ #################.*?###################################################"
             regexFlags: ims
             token: ${{ secrets.GITHUB_TOKEN }}
@@ -134,7 +134,7 @@ jobs:
               Workflow: `${{ github.workflow }}`.
               Tags: `${{ steps.checkAll.outputs.tags }}`.
 
-              ###################################################"
+              ###################################################
             regex: "################# _Do Not Edit This Area_ #################.*?###################################################"
             regexFlags: ims
             token: ${{ secrets.GITHUB_TOKEN }}
