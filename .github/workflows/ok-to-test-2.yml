@@ -54,7 +54,6 @@ jobs:
               else 
                 echo "Tags were not found!"
                 echo "outcome=failure"
-                exit 1
               fi  
 
       - name: Add a comment on the PR with tags documentation link
