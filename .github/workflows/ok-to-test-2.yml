@@ -38,7 +38,7 @@ jobs:
               REGEX='/ok-to-test tags="([^"]*)"';
               body='${{ github.event.pull_request.body }}';
               if [[ $body =~ $REGEX ]]; then
-                echo "tags='${BASH_REMATCH[1]}'" >> $GITHUB_OUTPUT
+                echo "tags=${BASH_REMATCH[1]}" >> $GITHUB_OUTPUT
               fi
 
       - name: Parse tags
