@@ -45,7 +45,7 @@ jobs:
       - name: Check if @tag.All is present in tags
         id: checkAll
         run: |
-          tags="${{ gsteps.parseTags.outputs.tags }}"
+          tags="${{ steps.parseTags.outputs.tags }}"
           if [[ ($tags == *"ALL"* || $tags == *"All"*  || $tags == *"all"*) && $tags != *"@tag.All"* ]]; then
             echo "invalid_tags_all=$tags" >> $GITHUB_OUTPUT
           elif [[ $tags == *"@tag.All"* ]]; then
