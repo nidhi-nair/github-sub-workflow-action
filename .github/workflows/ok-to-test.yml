@@ -14,10 +14,10 @@ jobs:
     steps:
       - name: Check for args
         run: |
-            body=${{ github.event.comment.body }};
+            body='${{ github.event.comment.body }}';
             REGEX='/ok-to-test (tags="([^"]*)")';
             if [[ $body =~ $REGEX ]]; then
-              echo all: "$BASH_REMATCH[0]"
+              echo all: "{$BASH_REMATCH[0]}"
               echo "yay"
             else
               echo 404
