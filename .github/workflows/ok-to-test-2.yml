@@ -54,13 +54,18 @@ jobs:
 
       - name: Add a comment on the PR with tags documentation link
         if: steps.parseTags.outputs.outcome != 'success'
-        uses: peter-evans/create-or-update-comment@v3
+        uses: nefrob/pr-description@v1.1.1
         with:
-          issue-number: ${{ github.event.number }}
-          body: |
-            The provided command lacks proper tags. Please modify PR body, specifying the tags you want to include or use `/ok-to-test tags="@tag.All"` to run all specs.
-            Explore the tags documentation [here](https://www.notion.so/appsmith/Ok-to-test-With-Tags-7c0fc64d4efb4afebf53348cd6252918)
-
+            content: |
+              ################# _Do Not Edit This Area_ #################
+              **ok-to-test Response:**
+              The provided command lacks proper tags. Please modify PR body, specifying the tags you want to include or use `/ok-to-test tags="@tag.All"` to run all specs.
+              Explore the tags documentation [here](https://www.notion.so/appsmith/Ok-to-test-With-Tags-7c0fc64d4efb4afebf53348cd6252918)
+              ###################################################"
+            regex: "################# _Do Not Edit This Area_ #################.*?###################################################"
+            regexFlags: ims
+            token: ${{ secrets.GITHUB_TOKEN }}
+        
       - name: Stop the workflow run if tags are not present
         if: steps.parseTags.outputs.outcome != 'success'
         run: exit 1
