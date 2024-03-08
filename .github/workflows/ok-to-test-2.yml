@@ -57,7 +57,7 @@ jobs:
               fi  
 
       - name: Add a comment on the PR with tags documentation link
-        if: steps.parseTags.outcome != 'success'
+        if: steps.parseTags.outputs.outcome != 'success'
         uses: peter-evans/create-or-update-comment@v3
         with:
           issue-number: ${{ github.event.number }}
@@ -66,7 +66,7 @@ jobs:
             Explore the tags documentation [here](https://www.notion.so/appsmith/Ok-to-test-With-Tags-7c0fc64d4efb4afebf53348cd6252918)
 
       - name: Stop the workflow run if tags are not present
-        if: steps.parseTags.outcome != 'success'
+        if: steps.parseTags.outputs.outcome != 'success'
         run: exit 1
 
       - name: Check if @tag.All is present in tags
