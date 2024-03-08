@@ -20,6 +20,11 @@ jobs:
       tags: ${{ steps.checkAll.outputs.tags }}
       matrix: ${{ steps.checkAll.outputs.matrix }}
     steps:
+      - name: Dump the client payload context
+        env:
+          PAYLOAD_CONTEXT: ${{ toJson(github.event) }}
+        run: echo "$PAYLOAD_CONTEXT"
+
       - name: Check label
         run: |
               if [[ '${{ github.event.label.name }}' != 'ok-to-test' ]]; then
@@ -28,17 +33,19 @@ jobs:
               fi  
 
       - name: Get tags
-        uses: actions-ecosystem/action-regex-match@v2
         id: getTags
-        with:
-          text: ${{ github.event.pull_request.body }}
-          regex: '/ok-to-test tags="([^"]*)"'
+        run: |
+              REGEX='/ok-to-test tags="([^"]*)"';
+              body='${{ github.event.pull_request.body }}';
+              if [[ $body =~ $REGEX ]]; then
+                echo "tags='${BASH_REMATCH[1]}'" >> $GITHUB_OUTPUT
+              fi
 
       - name: Parse tags
         id: parseTags
         run: |
-              if [[ '${{ steps.getTags.outputs.group1 }}' != '' ]]; then
-                echo "tags=${{ steps.getTags.outputs.group1 }}" >> $GITHUB_OUTPUT
+              if [[ '${{ steps.getTags.outputs.tags }}' != '' ]]; then
+                echo "tags=${{ steps.getTags.outputs.tags }}" >> $GITHUB_OUTPUT
                 echo "outcome=success" >> $GITHUB_OUTPUT
               else 
                 echo "Tags were not found!"
