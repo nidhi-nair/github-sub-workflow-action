@@ -9,25 +9,7 @@ on:
       - labeled
 
 jobs:
-  check-labels:
-    name: check-labels
-    runs-on: ubuntu-latest
-    steps:
-
-      - name: Dump the client payload context
-        env:
-          PAYLOAD_CONTEXT: ${{ toJson(github.event) }}
-        run: echo "$PAYLOAD_CONTEXT"
-        
-      - uses: docker://agilepathway/pull-request-label-checker:latest
-        with:
-          # Needs to have a Test Plan Approved label if not part of any of the pods below
-          any_of: ok-to-test
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-
   parse-tags:
-    needs: [check-labels]
-    if: success()
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
@@ -38,6 +20,13 @@ jobs:
       tags: ${{ steps.checkAll.outputs.tags }}
       matrix: ${{ steps.checkAll.outputs.matrix }}
     steps:
+      - name: Check label
+        run: |
+              if [[ '${{ github.event.label.name }}' != 'ok-to-test' ]]; then
+                echo "Irrelevant label '${{ github.event.label.name }}' added! "
+                exit 1
+              fi  
+
       - name: Get tags
         uses: actions-ecosystem/action-regex-match@v2
         id: getTags
